@@ -8,6 +8,7 @@ public class ResultVO {
     private String code;
     private String message;
     private Object content;
+    public ResultVO(){}
     public ResultVO(Object content){
         this.content=content;
     }

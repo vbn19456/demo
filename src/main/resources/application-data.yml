@@ -2,5 +2,5 @@ spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     username: sa
-    password: 111111
+    password: 123456
     url: jdbc:sqlserver://127.0.0.1;database=test;trustServerCertificate=true

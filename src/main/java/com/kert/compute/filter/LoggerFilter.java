@@ -38,11 +38,12 @@ public class LoggerFilter extends OncePerRequestFilter {
         String requestData = new String(request.getContentAsByteArray());
         String responseData = new String(response.getContentAsByteArray());
         LogInfo logInfo = new LogInfo();
+        logInfo.setUri(request.getRequestURI());
         logInfo.setCreateTime(date);
         logInfo.setRequest(requestData);
         logInfo.setResponse(responseData);
         logInfo.setClientIP(request.getRemoteAddr());
-        logger.info(JsonUtil.toStr(logInfo));
+        logger.info(logInfo);
         loggerService.insert(logInfo);
         response.copyBodyToResponse();
     }
