@@ -35,7 +35,8 @@ public class UserServiceImpl implements com.kert.compute.service.UserService {
             JWTUtil.verify(token);
             return true;
         }else{
-            throw new BusinessException(ErrCode.LOGIN_ERROR);
+            //throw new BusinessException(ErrCode.LOGIN_ERROR);
+            return false;
         }
     }
     public void logout(){

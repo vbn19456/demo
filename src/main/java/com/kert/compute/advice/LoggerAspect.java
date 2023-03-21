@@ -17,6 +17,7 @@ public class LoggerAspect {
 
     @Around("point()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("====================================================around");
         Logger logger = LoggerFactory.getLogger(joinPoint.getTarget().getClass());
         long start = System.currentTimeMillis();
         Signature methodName = joinPoint.getSignature();
