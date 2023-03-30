@@ -20,13 +20,17 @@ import java.sql.SQLException;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionAdvice {
-    @ExceptionHandler(DataAccessException .class)
+    @ExceptionHandler(DataAccessException.class)
     public ResultVO sqlHandler(DataAccessException  e){
-        SQLException cause = (SQLException)e.getCause();
-        log.error(cause.getMessage());
+        Throwable cause = e.getCause();
         ResultVO resultVO = new ResultVO();
-        resultVO.setCode(cause.getSQLState() );
-        resultVO.setMessage(cause.getMessage());
+        if (cause instanceof SQLException sqlException){
+            log.error(sqlException.getMessage());
+            resultVO.setCode(sqlException.getSQLState());
+            resultVO.setMessage(sqlException.getMessage());
+        }else {
+            resultVO.setMessage(cause.getMessage());
+        }
         return resultVO;
     }
     @ExceptionHandler(BusinessException.class)

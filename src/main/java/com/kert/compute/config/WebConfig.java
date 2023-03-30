@@ -1,9 +1,10 @@
 package com.kert.compute.config;
 
-import com.kert.compute.filter.LoggerFilter;
-import com.kert.compute.filter.LoginHandler;
-import com.kert.compute.service.LoggerService;
-import com.kert.compute.service.impl.UserServiceImpl;
+import com.kert.compute.filter.LoggerInterceptor;
+import com.kert.compute.filter.LoginInterceptor;
+import com.kert.compute.filter.RequestFilter;
+import com.kert.compute.service.LoggerSer;
+import com.kert.compute.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -15,14 +16,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Autowired
-    private  LoggerService loggerService;
+    private LoggerSer loggerService;
+    @Autowired
+    private UserService userService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginHandler(new UserServiceImpl()))
-                .excludePathPatterns("/login","/flush","/error","/static/**")
+        registry.addInterceptor(getLoginHandler())
+                .excludePathPatterns("/login","/flush","/static/**")
                 .addPathPatterns("/**");
-
+        registry.addInterceptor(getLoggerHandle()).excludePathPatterns("/login","/flush","/static/**").addPathPatterns("/**");
     }
 
     @Override
@@ -31,10 +34,25 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public FilterRegistrationBean<LoggerFilter> b(){
-        FilterRegistrationBean<LoggerFilter> bean = new FilterRegistrationBean<>();
+    public FilterRegistrationBean<RequestFilter> b(){
+        FilterRegistrationBean<RequestFilter> bean = new FilterRegistrationBean<>();
         bean.addUrlPatterns("/*");
-        bean.setFilter(new LoggerFilter(loggerService));
+        bean.setFilter(getLogger());
         return bean;
     }
+
+    @Bean
+    public RequestFilter getLogger(){
+        return new RequestFilter();
+    }
+    @Bean
+    public LoginInterceptor getLoginHandler(){
+        return new LoginInterceptor(userService);
+    }
+    @Bean
+    public LoggerInterceptor getLoggerHandle(){
+        return new LoggerInterceptor(loggerService);
+    }
+
+
 }

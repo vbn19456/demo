@@ -2,6 +2,6 @@ package com.kert.compute.service;
 
 import com.kert.compute.model.entity.LogInfo;
 
-public interface LoggerService {
+public interface LoggerSer {
     void insert(LogInfo logInfo);
 }
